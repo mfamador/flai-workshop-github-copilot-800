@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api';
+const ACTIVITIES_URL = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api/activities';
 
 const activityStyle = {
   Running:         'apple-pill-green',
@@ -20,7 +20,7 @@ function Activities() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/activities/`)
+    fetch(`${ACTIVITIES_URL}/`)
       .then(r => r.json())
       .then(d => { setActivities(Array.isArray(d) ? d : d.results || []); setLoading(false); })
       .catch(err => { setError(err.message); setLoading(false); });

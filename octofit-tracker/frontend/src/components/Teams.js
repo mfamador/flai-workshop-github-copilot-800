@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api';
+const TEAMS_URL = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api/teams';
 
 function Teams() {
   const [teams, setTeams] = useState([]);
@@ -8,7 +8,7 @@ function Teams() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/teams/`)
+    fetch(`${TEAMS_URL}/`)
       .then(r => r.json())
       .then(d => { setTeams(Array.isArray(d) ? d : d.results || []); setLoading(false); })
       .catch(err => { setError(err.message); setLoading(false); });

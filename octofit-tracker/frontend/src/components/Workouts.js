@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api';
+const WORKOUTS_URL = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api/workouts';
 
 const durationPill = d => d <= 30 ? 'apple-pill-green' : d <= 60 ? 'apple-pill-orange' : 'apple-pill-red';
 
@@ -10,7 +10,7 @@ function Workouts() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/workouts/`)
+    fetch(`${WORKOUTS_URL}/`)
       .then(r => r.json())
       .then(d => { setWorkouts(Array.isArray(d) ? d : d.results || []); setLoading(false); })
       .catch(err => { setError(err.message); setLoading(false); });

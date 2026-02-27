@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api';
+const USERS_URL = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api/users';
+const TEAMS_URL = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api/teams';
 
 function EditUserModal({ user, teams, onSave, onClose }) {
   const [form, setForm] = useState({
@@ -20,13 +21,13 @@ function EditUserModal({ user, teams, onSave, onClose }) {
     setSaving(true);
     setSaveError(null);
     try {
-      const res = await fetch(`${API_BASE}/users/${user.id}/`, {
+      const res = await fetch(`${USERS_URL}/${user.id}/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: form.name, username: form.username, email: form.email, age: parseInt(form.age, 10) }),
       });
       if (!res.ok) throw new Error(`Failed to update user (${res.status})`);
-      await fetch(`${API_BASE}/users/${user.id}/assign_team/`, {
+      await fetch(`${USERS_URL}/${user.id}/assign_team/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ team_id: form.team_id || null }),
@@ -96,8 +97,8 @@ function Users() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API_BASE}/users/`).then(r => r.json()).then(d => Array.isArray(d) ? d : d.results || []),
-      fetch(`${API_BASE}/teams/`).then(r => r.json()).then(d => Array.isArray(d) ? d : d.results || []),
+      fetch(`${USERS_URL}/`).then(r => r.json()).then(d => Array.isArray(d) ? d : d.results || []),
+      fetch(`${TEAMS_URL}/`).then(r => r.json()).then(d => Array.isArray(d) ? d : d.results || []),
     ])
       .then(([u, t]) => { setUsers(u); setTeams(t); setLoading(false); })
       .catch(err => { setError(err.message); setLoading(false); });

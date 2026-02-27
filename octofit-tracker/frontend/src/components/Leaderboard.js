@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api';
+const LEADERBOARD_URL = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api/leaderboard';
 
 function RankBadge({ rank }) {
   const cls = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
@@ -13,7 +13,7 @@ function Leaderboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE}/leaderboard/`)
+    fetch(`${LEADERBOARD_URL}/`)
       .then(r => r.json())
       .then(d => { setEntries(Array.isArray(d) ? d : d.results || []); setLoading(false); })
       .catch(err => { setError(err.message); setLoading(false); });

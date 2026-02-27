@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev/api`;
+const API_BASE = 'https://opulent-capybara-6467x4q965hxq57-8000.app.github.dev/api';
 
 function Teams() {
   const [teams, setTeams] = useState([]);

@@ -13,82 +13,64 @@ function Leaderboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const url = `${API_BASE}/leaderboard/`;
-    console.log('Leaderboard: fetching from', url);
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        console.log('Leaderboard: fetched data', data);
-        setEntries(Array.isArray(data) ? data : data.results || []);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Leaderboard: fetch error', err);
-        setError(err.message);
-        setLoading(false);
-      });
+    fetch(`${API_BASE}/leaderboard/`)
+      .then(r => r.json())
+      .then(d => { setEntries(Array.isArray(d) ? d : d.results || []); setLoading(false); })
+      .catch(err => { setError(err.message); setLoading(false); });
   }, []);
 
   if (loading) return (
     <div className="container mt-5 text-center">
-      <div className="spinner-border text-danger" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
-      <p className="mt-2 text-muted">Loading leaderboard...</p>
+      <div className="apple-spinner" />
+      <p style={{ color: 'var(--apple-secondary)', fontSize: '0.9rem' }}>Loading leaderboard…</p>
     </div>
   );
 
-  if (error) return (
-    <div className="container mt-4">
-      <div className="alert alert-danger d-flex align-items-center" role="alert">
-        <strong>Error loading leaderboard:</strong>&nbsp;{error}
-      </div>
-    </div>
-  );
+  if (error) return (<div className="container mt-4"><div className="apple-alert">{error}</div></div>);
 
   const sorted = [...entries].sort((a, b) => b.score - a.score);
+  const maxScore = sorted[0]?.score || 1;
 
   return (
     <div className="container mt-4">
       <h2 className="page-heading">Leaderboard</h2>
-      <p className="text-muted mb-3">{sorted.length} athlete{sorted.length !== 1 ? 's' : ''} ranked</p>
-      <div className="octofit-table">
-        <table className="table table-hover mb-0">
+      <p className="page-subheading">{sorted.length} athlete{sorted.length !== 1 ? 's' : ''} ranked</p>
+      <div className="apple-table-wrap">
+        <table className="table mb-0">
           <thead>
             <tr>
-              <th style={{width: '60px'}}>Rank</th>
+              <th style={{ width: '60px' }}>Rank</th>
               <th>Athlete</th>
-              <th>Email</th>
+              <th>Team</th>
               <th>Score</th>
-              <th>Progress</th>
+              <th style={{ minWidth: '140px' }}>Progress</th>
             </tr>
           </thead>
           <tbody>
             {sorted.map((entry, index) => {
               const rank = index + 1;
-              const name = entry.user && entry.user.name ? entry.user.name : `User #${entry.user}`;
-              const email = entry.user && entry.user.email ? entry.user.email : '';
-              const maxScore = sorted[0]?.score || 1;
+              const name = entry.user?.name || `User #${entry.user}`;
+              const team = entry.user?.current_team?.name;
               const pct = Math.round((entry.score / maxScore) * 100);
               return (
                 <tr key={entry.id}>
                   <td><RankBadge rank={rank} /></td>
-                  <td><strong>{name}</strong></td>
-                  <td><small className="text-muted">{email}</small></td>
                   <td>
-                    <span className="fw-bold text-danger">{entry.score}</span>
-                    <small className="text-muted"> pts</small>
+                    <div style={{ fontWeight: 600 }}>{name}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--apple-secondary)' }}>{entry.user?.email}</div>
                   </td>
-                  <td style={{minWidth: '120px'}}>
-                    <div className="progress" style={{height: '8px'}}>
-                      <div
-                        className="progress-bar bg-danger"
-                        role="progressbar"
-                        style={{width: `${pct}%`}}
-                        aria-valuenow={pct}
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      />
+                  <td>
+                    {team
+                      ? <span className="apple-pill apple-pill-blue">{team}</span>
+                      : <span style={{ color: 'var(--apple-tertiary)' }}>—</span>}
+                  </td>
+                  <td>
+                    <span style={{ fontWeight: 700, color: 'var(--apple-black)', fontSize: '1rem' }}>{entry.score}</span>
+                    <span style={{ color: 'var(--apple-secondary)', fontSize: '0.8rem' }}> pts</span>
+                  </td>
+                  <td>
+                    <div className="apple-progress">
+                      <div className="apple-progress-fill" style={{ width: `${pct}%` }} />
                     </div>
                   </td>
                 </tr>
@@ -102,4 +84,5 @@ function Leaderboard() {
 }
 
 export default Leaderboard;
+
 

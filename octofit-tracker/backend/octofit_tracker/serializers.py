@@ -4,13 +4,21 @@ from .models import User, Team, Activity, Leaderboard, Workout
 
 class UserSerializer(serializers.ModelSerializer):
     _id = serializers.SerializerMethodField()
+    current_team = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['_id', 'id', 'email', 'name', 'age']
+        fields = ['_id', 'id', 'username', 'email', 'name', 'age', 'current_team']
 
     def get__id(self, obj):
         return str(obj.pk)
+
+    def get_current_team(self, obj):
+        from .models import Team
+        team = Team.objects.filter(members=obj).first()
+        if team:
+            return {'id': team.pk, 'name': team.name}
+        return None
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -27,6 +35,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     _id = serializers.SerializerMethodField()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Activity

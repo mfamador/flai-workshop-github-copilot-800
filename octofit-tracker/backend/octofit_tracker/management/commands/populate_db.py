@@ -16,16 +16,17 @@ class Command(BaseCommand):
 
         self.stdout.write('Creating users...')
         users_data = [
-            {'email': 'ironman@avengers.com', 'name': 'Tony Stark', 'age': 45},
-            {'email': 'captainamerica@avengers.com', 'name': 'Steve Rogers', 'age': 105},
-            {'email': 'blackwidow@avengers.com', 'name': 'Natasha Romanoff', 'age': 38},
-            {'email': 'thor@avengers.com', 'name': 'Thor Odinson', 'age': 1500},
-            {'email': 'hulk@avengers.com', 'name': 'Bruce Banner', 'age': 49},
-            {'email': 'batman@dc.com', 'name': 'Bruce Wayne', 'age': 40},
-            {'email': 'superman@dc.com', 'name': 'Clark Kent', 'age': 35},
-            {'email': 'wonderwoman@dc.com', 'name': 'Diana Prince', 'age': 3000},
-            {'email': 'flash@dc.com', 'name': 'Barry Allen', 'age': 28},
-            {'email': 'greenlantern@dc.com', 'name': 'Hal Jordan', 'age': 36},
+            {'email': 'marco@anova.com', 'username': 'marcoamador', 'name': 'Marco Amador', 'age': 52},
+            {'email': 'ironman@avengers.com', 'username': 'ironman', 'name': 'Tony Stark', 'age': 45},
+            {'email': 'captainamerica@avengers.com', 'username': 'captainamerica', 'name': 'Steve Rogers', 'age': 105},
+            {'email': 'blackwidow@avengers.com', 'username': 'blackwidow', 'name': 'Natasha Romanoff', 'age': 38},
+            {'email': 'thor@avengers.com', 'username': 'thor', 'name': 'Thor Odinson', 'age': 1500},
+            {'email': 'hulk@avengers.com', 'username': 'hulk', 'name': 'Bruce Banner', 'age': 49},
+            {'email': 'batman@dc.com', 'username': 'batman', 'name': 'Bruce Wayne', 'age': 40},
+            {'email': 'superman@dc.com', 'username': 'superman', 'name': 'Clark Kent', 'age': 35},
+            {'email': 'wonderwoman@dc.com', 'username': 'wonderwoman', 'name': 'Diana Prince', 'age': 3000},
+            {'email': 'flash@dc.com', 'username': 'flash', 'name': 'Barry Allen', 'age': 28},
+            {'email': 'greenlantern@dc.com', 'username': 'greenlantern', 'name': 'Hal Jordan', 'age': 36},
         ]
         users = {}
         for ud in users_data:
@@ -36,6 +37,7 @@ class Command(BaseCommand):
         self.stdout.write('Creating teams...')
         team_marvel = Team.objects.create(name='Team Marvel')
         team_marvel.members.set([
+            users['marco@anova.com'],
             users['ironman@avengers.com'],
             users['captainamerica@avengers.com'],
             users['blackwidow@avengers.com'],
@@ -56,6 +58,7 @@ class Command(BaseCommand):
 
         self.stdout.write('Creating activities...')
         activities_data = [
+            {'user': users['marco@anova.com'], 'activity_type': 'Running', 'duration': 60.0, 'date': date(2024, 1, 6)},
             {'user': users['ironman@avengers.com'], 'activity_type': 'Running', 'duration': 30.0, 'date': date(2024, 1, 1)},
             {'user': users['captainamerica@avengers.com'], 'activity_type': 'Cycling', 'duration': 45.0, 'date': date(2024, 1, 2)},
             {'user': users['blackwidow@avengers.com'], 'activity_type': 'Yoga', 'duration': 60.0, 'date': date(2024, 1, 3)},
@@ -73,6 +76,7 @@ class Command(BaseCommand):
 
         self.stdout.write('Creating leaderboard entries...')
         leaderboard_data = [
+            {'user': users['marco@anova.com'], 'score': 1050},
             {'user': users['ironman@avengers.com'], 'score': 950},
             {'user': users['captainamerica@avengers.com'], 'score': 870},
             {'user': users['blackwidow@avengers.com'], 'score': 820},

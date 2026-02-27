@@ -24,41 +24,66 @@ function Teams() {
       });
   }, []);
 
-  if (loading) return <div className="text-center mt-4"><div className="spinner-border" /></div>;
-  if (error) return <div className="alert alert-danger">Error: {error}</div>;
+  if (loading) return (
+    <div className="container mt-5 text-center">
+      <div className="spinner-border text-danger" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+      <p className="mt-2 text-muted">Loading teams...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="container mt-4">
+      <div className="alert alert-danger d-flex align-items-center" role="alert">
+        <strong>Error loading teams:</strong>&nbsp;{error}
+      </div>
+    </div>
+  );
 
   return (
     <div className="container mt-4">
-      <h2>Teams</h2>
-      {teams.map(team => (
-        <div key={team.id} className="card mb-3">
-          <div className="card-header bg-dark text-white">
-            <h5 className="mb-0">{team.name}</h5>
+      <h2 className="page-heading">Teams</h2>
+      <p className="text-muted mb-3">{teams.length} team{teams.length !== 1 ? 's' : ''} competing</p>
+      <div className="row g-4">
+        {teams.map(team => (
+          <div key={team.id} className="col-lg-6">
+            <div className="card octofit-card h-100">
+              <div className="card-header d-flex align-items-center justify-content-between">
+                <h5 className="mb-0">{team.name}</h5>
+                <span className="badge bg-danger rounded-pill">
+                  {team.members ? team.members.length : 0} members
+                </span>
+              </div>
+              <div className="card-body p-0">
+                <div className="octofit-table">
+                  <table className="table table-hover mb-0">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Age</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {team.members && team.members.map(member => (
+                        <tr key={member.id}>
+                          <td><strong>{member.name}</strong></td>
+                          <td><small className="text-muted">{member.email}</small></td>
+                          <td><span className="badge bg-light text-dark border">{member.age}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="card-body">
-            <table className="table table-sm mb-0">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Age</th>
-                </tr>
-              </thead>
-              <tbody>
-                {team.members && team.members.map(member => (
-                  <tr key={member.id}>
-                    <td>{member.name}</td>
-                    <td>{member.email}</td>
-                    <td>{member.age}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
 
 export default Teams;
+

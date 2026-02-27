@@ -2,6 +2,18 @@ import React, { useState, useEffect } from 'react';
 
 const API_BASE = `https://${process.env.REACT_APP_CODESPACE_NAME}-8000.app.github.dev/api`;
 
+const activityColors = {
+  Running: 'success',
+  Cycling: 'primary',
+  Yoga: 'info',
+  Weightlifting: 'warning',
+  Swimming: 'primary',
+  'Martial Arts': 'danger',
+  Flying: 'secondary',
+  'Combat Training': 'danger',
+  'Ring Training': 'success',
+};
+
 function Activities() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,34 +36,58 @@ function Activities() {
       });
   }, []);
 
-  if (loading) return <div className="text-center mt-4"><div className="spinner-border" /></div>;
-  if (error) return <div className="alert alert-danger">Error: {error}</div>;
+  if (loading) return (
+    <div className="container mt-5 text-center">
+      <div className="spinner-border text-danger" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+      <p className="mt-2 text-muted">Loading activities...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="container mt-4">
+      <div className="alert alert-danger d-flex align-items-center" role="alert">
+        <strong>Error loading activities:</strong>&nbsp;{error}
+      </div>
+    </div>
+  );
 
   return (
     <div className="container mt-4">
-      <h2>Activities</h2>
-      <table className="table table-striped table-bordered">
-        <thead className="table-dark">
-          <tr>
-            <th>User</th>
-            <th>Activity Type</th>
-            <th>Duration (min)</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activities.map(activity => (
-            <tr key={activity.id}>
-              <td>{activity.user}</td>
-              <td>{activity.activity_type}</td>
-              <td>{activity.duration}</td>
-              <td>{activity.date}</td>
+      <h2 className="page-heading">Activities</h2>
+      <p className="text-muted mb-3">{activities.length} activit{activities.length !== 1 ? 'ies' : 'y'} recorded</p>
+      <div className="octofit-table">
+        <table className="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Activity Type</th>
+              <th>Duration</th>
+              <th>Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {activities.map((activity, index) => (
+              <tr key={activity.id}>
+                <td><span className="badge bg-secondary">{index + 1}</span></td>
+                <td><strong>{activity.user?.name || `User #${activity.user}`}</strong></td>
+                <td>
+                  <span className={`badge bg-${activityColors[activity.activity_type] || 'secondary'}`}>
+                    {activity.activity_type}
+                  </span>
+                </td>
+                <td>{activity.duration} min</td>
+                <td><small className="text-muted">{activity.date ? activity.date.split('-').reverse().join('/') : ''}</small></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
 export default Activities;
+
